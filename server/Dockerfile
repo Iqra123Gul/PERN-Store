@@ -1,11 +1,11 @@
-FROM node:16
-
-WORKDIR /usr/src/app
-
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 COPY . .
 
-RUN npm ci --no-audit || npm ci --no-audit --maxsockets 1
-
-EXPOSE 9000
-
-CMD [ "npm", "start" ]
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app .
+EXPOSE 8080
+CMD ["node", "index.js"]
