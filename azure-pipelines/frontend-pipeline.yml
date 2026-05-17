@@ -32,7 +32,8 @@ stages:
             displayName: 'Build Frontend Image'
             inputs:
               command: build
-              repository: $(DOCKER_REGISTRY)/$(FRONTEND_IMAGE_NAME)
+              containerRegistry: acr-service-connection
+              repository: $(FRONTEND_IMAGE_NAME)
               dockerfile: client/Dockerfile
               buildContext: client/
               arguments: --build-arg VITE_API_URL=https://app-pernstore-backend-iqra.azurewebsites.net
@@ -44,7 +45,8 @@ stages:
             displayName: 'Push Frontend Image to ACR'
             inputs:
               command: push
-              repository: $(DOCKER_REGISTRY)/$(FRONTEND_IMAGE_NAME)
+              containerRegistry: acr-service-connection
+              repository: $(FRONTEND_IMAGE_NAME)
               tags: |
                 $(imageTag)
                 latest

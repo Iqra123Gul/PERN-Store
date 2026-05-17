@@ -32,7 +32,8 @@ stages:
             displayName: 'Build Backend Image'
             inputs:
               command: build
-              repository: $(DOCKER_REGISTRY)/$(BACKEND_IMAGE_NAME)
+              containerRegistry: acr-service-connection
+              repository: $(BACKEND_IMAGE_NAME)
               dockerfile: server/Dockerfile
               buildContext: server/
               tags: |
@@ -43,7 +44,8 @@ stages:
             displayName: 'Push Backend Image to ACR'
             inputs:
               command: push
-              repository: $(DOCKER_REGISTRY)/$(BACKEND_IMAGE_NAME)
+              containerRegistry: acr-service-connection
+              repository: $(BACKEND_IMAGE_NAME)
               tags: |
                 $(imageTag)
                 latest
