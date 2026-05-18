@@ -23,29 +23,13 @@ stages:
           - checkout: self
 
           - task: Docker@2
-            displayName: 'Login to ACR'
+            displayName: 'Build and Push Backend Image'
             inputs:
-              command: login
+              command: buildAndPush
               containerRegistry: acr-service-connection
-
-          - task: Docker@2
-            displayName: 'Build Backend Image'
-            inputs:
-              command: build
-              containerRegistry: acr-service-connection
-              repository: $(BACKEND_IMAGE_NAME)
+              repository: pernstore-backend
               dockerfile: server/Dockerfile
               buildContext: server/
-              tags: |
-                $(imageTag)
-                latest
-
-          - task: Docker@2
-            displayName: 'Push Backend Image to ACR'
-            inputs:
-              command: push
-              containerRegistry: acr-service-connection
-              repository: $(BACKEND_IMAGE_NAME)
               tags: |
                 $(imageTag)
                 latest
@@ -68,7 +52,7 @@ stages:
                   inputs:
                     azureSubscription: $(AZURE_SUBSCRIPTION)
                     appName: $(BACKEND_APP_NAME)-dev
-                    containers: $(DOCKER_REGISTRY)/$(BACKEND_IMAGE_NAME):$(imageTag)
+                    containers: $(DOCKER_REGISTRY)/pernstore-backend:$(imageTag)
 
   - stage: DeployProd
     displayName: 'Deploy to Production'
@@ -88,4 +72,4 @@ stages:
                   inputs:
                     azureSubscription: $(AZURE_SUBSCRIPTION)
                     appName: $(BACKEND_APP_NAME)
-                    containers: $(DOCKER_REGISTRY)/$(BACKEND_IMAGE_NAME):$(imageTag)
+                    containers: $(DOCKER_REGISTRY)/pernstore-backend:$(imageTag)
