@@ -11,6 +11,8 @@ variables:
   - group: pernstore-variables
   - name: imageTag
     value: $(Build.BuildId)
+  - name: VITE_API_URL
+    value: 'https://app-pernstore-backend-iqra-hnahbvf2d0fzeqdh.eastasia-01.azurewebsites.net'
 
 stages:
   - stage: Build
@@ -30,7 +32,6 @@ stages:
               repository: $(FRONTEND_IMAGE_NAME)
               dockerfile: client/Dockerfile
               buildContext: client/
-              arguments: --build-arg VITE_API_URL=https://app-pernstore-backend-iqra.azurewebsites.net
               tags: |
                 $(imageTag)
                 latest
@@ -56,3 +57,4 @@ stages:
                     azure_static_web_apps_api_token: $(STATIC_WEB_APP_TOKEN)
                     app_location: 'client'
                     output_location: 'dist'
+                    app_build_command: 'npm run build -- --mode production'
